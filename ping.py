@@ -7,6 +7,7 @@ GOOGLE_IP = '8.8.8.8'
 
 try:
     from ping3 import ping, verbose_ping
+    import matplotlib.pyplot as plt
 except:
     print("Please install dependencies: ping3")
     exit()
@@ -34,10 +35,37 @@ def append_to_file(ping):
     except:
         print("Error saving file")
 
+def run_program():
+    ping = ping_server()
+    append_to_file(ping)
+
+def run_program_loop():
+    while True:
+        ping = ping_server()
+        append_to_file(ping)  
+        time.sleep(1)
+
+def show_graph():
+    x, y = [], []
+    f = open("data.txt", "r")
+    while True:
+        data = str(f.readline())
+        if not data: 
+            break
+        d = data.strip().split(",")
+        x.append(float(d[0]))
+        y.append(float(d[1]))
+    print(x, y)
+    plt.plot(x, y)
+    plt.show()
+
+
 def main(argv):
     if argv[1] == "-p":
-        ping = ping_server()
-        append_to_file(ping)
+        print("Running main loop")
+        run_program_loop()
+    elif argv[1] == "-g":
+        show_graph()    
     elif argv[1] != "-p":
         print("Invalid command")
 
